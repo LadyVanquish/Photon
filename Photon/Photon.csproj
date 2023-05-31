@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Photon</RootNamespace>
+    <Platforms>x64</Platforms>
+    <BaseOutputPath>$(SolutionDir)bin\$(Configuration)-$(Platform)\</BaseOutputPath>
+    <AnalysisMode>Recommended</AnalysisMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Photon.Core\Photon.Core.csproj" />
+    <ProjectReference Include="..\Photon.Windows\Photon.Windows.vcxproj" />
+  </ItemGroup>
+
+</Project>

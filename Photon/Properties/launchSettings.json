@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Photon": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
