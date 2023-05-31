@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <atlstr.h>
 
 namespace Photon
 {
@@ -17,6 +18,7 @@ namespace Photon
             void set(System::String^ value) override
             {
                 _title = value;
+                SetWindowText(_hWnd, CString(_title));
             }
         }
         property Size ClientSize

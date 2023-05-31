@@ -1,23 +1,22 @@
 #include "WindowsWindow.h"
 #include "WindowsPlatform.h"
-#include <atlstr.h>
 #include <system_error>
+#include "Log.h"
 
 namespace Photon
 {
     WindowsWindow::WindowsWindow(WindowsPlatform^ platform, System::String^ title, Size size, HINSTANCE hInstance)
     {
         _platform = platform;
-        Title = title;
+        _title = title;
         RECT rect {};
         rect.right = size.Width;
         rect.bottom = size.Height;
 
         AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, false, WS_EX_APPWINDOW);
-        CString cTitle = CString(title);
         _hWnd = CreateWindowEx(WS_EX_APPWINDOW,
                                L"PhotonWindow",
-                               cTitle,
+                               CString(title),
                                WS_OVERLAPPEDWINDOW,
                                CW_USEDEFAULT,
                                CW_USEDEFAULT,

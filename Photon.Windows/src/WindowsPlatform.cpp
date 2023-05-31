@@ -1,11 +1,17 @@
 #include "WindowsPlatform.h"
 #include <Windows.h>
 #include <system_error>
+#include <iostream>
 
 namespace Photon
 {
     LRESULT ProcessWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
+        WindowsWindow^ window;
+        if (!WindowsPlatform::Windows->TryGetValue(System::IntPtr(hWnd), window))
+        {
+            return DefWindowProc(hWnd, message, wParam, lParam);
+        }
         switch (message)
         {
             case WM_DESTROY:
@@ -18,8 +24,6 @@ namespace Photon
     WindowsPlatform::WindowsPlatform(System::String^ title, Size size)
     {
         HINSTANCE hInstance = GetModuleHandle(NULL);
-        _windows = gcnew System::Collections::Generic::Dictionary<System::IntPtr, WindowsWindow^>(5);
-        CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
         WNDCLASSEX wndClassEx {};
         wndClassEx.cbSize = sizeof(WNDCLASSEX);
         wndClassEx.style = CS_HREDRAW | CS_VREDRAW;
@@ -33,7 +37,7 @@ namespace Photon
             throw gcnew System::InvalidOperationException(gcnew System::String(message.c_str()));
         }
         _mainWindow = gcnew WindowsWindow(this, title, size, hInstance);
-        _windows->Add(_mainWindow->Handle, _mainWindow);
+        Windows->Add(_mainWindow->Handle, _mainWindow);
     }
 
     WindowsPlatform::~WindowsPlatform()
@@ -65,8 +69,6 @@ namespace Photon
                 Application->Tick();
             }
         }
-
-        CoUninitialize();
     }
 
     void WindowsPlatform::RequestExit()

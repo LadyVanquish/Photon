@@ -74,6 +74,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\D3D12Application.h" />
+    <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\WindowsPlatform.h" />
     <ClInclude Include="src\WindowsWindow.h" />
   </ItemGroup>

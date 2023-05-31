@@ -28,9 +28,12 @@ namespace Photon
         void Run() override;
         void RequestExit() override;
 
+    internal:
+        static System::Collections::Generic::Dictionary<System::IntPtr, WindowsWindow^>^ Windows = gcnew System::Collections::Generic::Dictionary<System::IntPtr, WindowsWindow^>(5);
+
     private:
+
         bool _disposed;
         WindowsWindow^ _mainWindow;
-        System::Collections::Generic::Dictionary<System::IntPtr, WindowsWindow^>^ _windows;
     };
 }
