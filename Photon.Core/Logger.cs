@@ -5,17 +5,7 @@ using System.Runtime.CompilerServices;
 namespace Photon;
 
 [Flags]
-public enum LogEventType
-{
-    Critical = 1 << 0,
-    Error = 1 << 1,
-    Warning = 1 << 2,
-    Information = 1 << 3,
-    Verbose = 1 << 4
-}
-
-[Flags]
-public enum LogKind : ushort
+public enum LogEventType : ushort
 {
     None = 0,
     Exception = 1 << 0,
@@ -33,7 +23,7 @@ public enum LogKind : ushort
     All = 0xFFFF
 }
 
-public delegate void LogWriteHandler(string source, LogEventType eventType, string message, string[]? parameters);
+public delegate void LogWriteHandler(string source, LogEventType eventType, string message, object[]? parameters);
 
 public sealed class Logger
 {
@@ -48,7 +38,7 @@ public sealed class Logger
             {
                 _logger = logger;
                 _message = message;
-                _logger.Output(LogEventType.Verbose, $"Entering: {_message}");
+                _logger.Output(LogEventType.Scope, $"Entering: {_message}");
                 ++_logger.IndentLevel;
             }
         }
@@ -58,7 +48,7 @@ public sealed class Logger
             lock (_logger._lock)
             {
                 --_logger.IndentLevel;
-                _logger.Output(LogEventType.Verbose, $"Leaving: {_message}");
+                _logger.Output(LogEventType.Scope, $"Leaving: {_message}");
             }
         }
     }
@@ -72,16 +62,16 @@ public sealed class Logger
         }
     }
 
-    private static readonly LogKind[] _verbosityLevels = new[]
+    private static readonly LogEventType[] _verbosityLevels = new[]
     {
-        LogKind.None,
-        LogKind.Exception | LogKind.Assert | LogKind.Error,
-        LogKind.Exception | LogKind.Assert | LogKind.Error | LogKind.Warning,
-        LogKind.Exception | LogKind.Assert | LogKind.Error | LogKind.Warning | LogKind.Message,
-        LogKind.Exception | LogKind.Assert | LogKind.Error | LogKind.Warning | LogKind.Message | LogKind.Information,
-        LogKind.Exception | LogKind.Assert | LogKind.Error | LogKind.Warning | LogKind.Message | LogKind.Information | LogKind.Note,
-        (LogKind)255,
-        LogKind.All
+        LogEventType.None,
+        LogEventType.Exception | LogEventType.Assert | LogEventType.Error,
+        LogEventType.Exception | LogEventType.Assert | LogEventType.Error | LogEventType.Warning,
+        LogEventType.Exception | LogEventType.Assert | LogEventType.Error | LogEventType.Warning | LogEventType.Message,
+        LogEventType.Exception | LogEventType.Assert | LogEventType.Error | LogEventType.Warning | LogEventType.Message | LogEventType.Information,
+        LogEventType.Exception | LogEventType.Assert | LogEventType.Error | LogEventType.Warning | LogEventType.Message | LogEventType.Information | LogEventType.Note,
+        (LogEventType)255,
+        LogEventType.All
     };
 
     private static readonly Logger _nullLogger = new("NullLogger");
@@ -95,7 +85,7 @@ public sealed class Logger
     private readonly object _lock = new();
     private readonly string _name;
 
-    internal LogKind LogMask { get; private set; }
+    internal LogEventType LogMask { get; private set; }
 
     public int IndentLevel { get; private set; }
     public LogWriteHandler? WriteHandler { get; internal set; }
@@ -132,45 +122,31 @@ public sealed class Logger
         LogMask = _verbosityLevels[level];
     }
 
-    public void Output(LogEventType eventType, string message, string[]? parameters = null)
+    public void Output(LogEventType eventType, string message, object[]? parameters = null)
     {
         WriteHandler?.Invoke(_name, eventType, string.Concat(new string(' ', IndentLevel * 4), message), parameters);
     }
 
     public IDisposable LogMethod(string additionalInfo = "")
     {
-        return (LogMask & LogKind.Method) == LogKind.Method ? new InternalScopedTrace(this, GetCallingMethodInfo(additionalInfo)) : NullDisposable.Default;
+        return (LogMask & LogEventType.Method) == LogEventType.Method ? new InternalScopedTrace(this, GetCallingMethodInfo(additionalInfo)) : NullDisposable.Default;
     }
 
-    public void Log(LogKind kind, string message, params string[] parameters)
+    public void Log(LogEventType eventType, string message, params object[] parameters)
     {
-        if ((LogMask & kind) != kind)
+        if ((LogMask & eventType) != eventType)
         {
             return;
         }
-        Output(kind switch
-        {
-            LogKind.Exception or LogKind.Assert => LogEventType.Critical,
-            LogKind.Error => LogEventType.Error,
-            LogKind.Warning => LogEventType.Warning,
-            LogKind.Message or LogKind.Information => LogEventType.Information,
-            _ => LogEventType.Verbose
-        }, message, parameters);
+        Output(eventType, message, parameters);
     }
 
-    public void Log(LogKind kind, [InterpolatedStringHandlerArgument("", "kind")] ref LoggingInterpolatedStringHandler stringHandler)
+    public void Log(LogEventType eventType, [InterpolatedStringHandlerArgument("", "eventType")] ref LoggingInterpolatedStringHandler stringHandler)
     {
-        if ((LogMask & kind) != kind)
+        if ((LogMask & eventType) != eventType)
         {
             return;
         }
-        Output(kind switch
-        {
-            LogKind.Exception or LogKind.Assert => LogEventType.Critical,
-            LogKind.Error => LogEventType.Error,
-            LogKind.Warning => LogEventType.Warning,
-            LogKind.Message or LogKind.Information => LogEventType.Information,
-            _ => LogEventType.Verbose
-        }, stringHandler.ToString(), null);
+        Output(eventType, stringHandler.ToString(), null);
     }
 }

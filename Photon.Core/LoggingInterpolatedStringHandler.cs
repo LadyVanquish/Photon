@@ -7,9 +7,9 @@ public ref struct LoggingInterpolatedStringHandler
 {
     private DefaultInterpolatedStringHandler _innerHandler;
 
-    public LoggingInterpolatedStringHandler(int literalLength, int formattedCount, Logger logger, LogKind kind, out bool shouldAppend)
+    public LoggingInterpolatedStringHandler(int literalLength, int formattedCount, Logger logger, LogEventType eventType, out bool shouldAppend)
     {
-        if ((logger.LogMask & kind) != kind)
+        if ((logger.LogMask & eventType) != eventType)
         {
             _innerHandler = default;
             shouldAppend = false;

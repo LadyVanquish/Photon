@@ -1,7 +1,6 @@
 #include "WindowsWindow.h"
 #include "WindowsPlatform.h"
 #include <system_error>
-#include "Log.h"
 
 namespace Photon
 {
