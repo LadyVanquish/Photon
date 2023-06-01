@@ -21,7 +21,7 @@ public sealed class LoggerBuilder
             if (parameters is not null && parameters.Length > 0)
             {
                 // TODO: format
-                Console.WriteLine($"TODO: {nameof(LoggerBuilder)}.{nameof(FileWriter)}.{nameof(Handle)}() needs to implement format with named parameters.");
+                Console.WriteLine($"TODO: {nameof(LoggerBuilder)}.{nameof(FileWriter)}.{nameof(Handle)}() implement format with named parameters.");
                 message = string.Format(CultureInfo.InvariantCulture, message, parameters);
             }
             _stream.Write(Encoding.UTF8.GetBytes($"[{DateTime.Now} {source}] {eventType}: {message}"));
@@ -44,7 +44,7 @@ public sealed class LoggerBuilder
         if (parameters is not null && parameters.Length > 0)
         {
             // TODO: format
-            Console.WriteLine($"TODO: {nameof(LoggerBuilder)}.{nameof(ConsoleHandler)}() needs to implement format with named parameters.");
+            Console.WriteLine($"TODO: {nameof(LoggerBuilder)}.{nameof(ConsoleHandler)}() implement format with named parameters.");
             message = string.Format(CultureInfo.InvariantCulture, message, parameters);
         }
         Console.Write($"[{DateTime.Now:g}] [{source}] ");

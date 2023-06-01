@@ -1,3 +1,5 @@
+#include "phpch.h"
+
 #include "D3D12Application.h"
 
 namespace Photon

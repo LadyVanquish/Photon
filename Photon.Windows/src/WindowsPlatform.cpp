@@ -1,7 +1,6 @@
+#include "phpch.h"
+
 #include "WindowsPlatform.h"
-#include <Windows.h>
-#include <system_error>
-#include <iostream>
 
 namespace Photon
 {
@@ -14,6 +13,23 @@ namespace Photon
         }
         switch (message)
         {
+            case WM_KEYDOWN:
+                // TODO: window->OnEvent(gcnew Events::KeyPressedEvent(LOWORD(lParam), (KeyboardKey)MapVirtualKey((UINT)wParam, MAPVK_VK_TO_VSC)));
+                return 0;
+            case WM_ENTERSIZEMOVE:
+                window->EnterSizeMove();
+                return 0;
+            case WM_EXITSIZEMOVE:
+                window->ExitSizeMove();
+                return 0;
+            case WM_SIZE:
+                window->ClientSize = Size(LOWORD(lParam), HIWORD(lParam));
+                window->OnEvent(gcnew Events::WindowResizeEvent(LOWORD(lParam), HIWORD(lParam)));
+                return 0;
+            case WM_CLOSE:
+                window->OnEvent(gcnew Events::WindowCloseEvent());
+                DestroyWindow(window->_hWnd);
+                return 0;
             case WM_DESTROY:
                 PostQuitMessage(0);
                 return 0;
@@ -37,7 +53,7 @@ namespace Photon
             throw gcnew System::InvalidOperationException(gcnew System::String(message.c_str()));
         }
         _mainWindow = gcnew WindowsWindow(this, title, size, hInstance);
-        Windows->Add(_mainWindow->Handle, _mainWindow);
+        Windows->Add(System::IntPtr(_mainWindow->_hWnd), _mainWindow);
     }
 
     WindowsPlatform::~WindowsPlatform()

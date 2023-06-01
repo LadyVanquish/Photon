@@ -1,6 +1,7 @@
+#include "phpch.h"
+
 #include "WindowsWindow.h"
 #include "WindowsPlatform.h"
-#include <system_error>
 
 namespace Photon
 {
@@ -11,6 +12,8 @@ namespace Photon
         RECT rect {};
         rect.right = size.Width;
         rect.bottom = size.Height;
+
+        PH_INFO("Creating window '{0}' (Size: [{1}, {2}])", title, size.Width, size.Height);
 
         AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, false, WS_EX_APPWINDOW);
         _hWnd = CreateWindowEx(WS_EX_APPWINDOW,
@@ -33,6 +36,8 @@ namespace Photon
 
         GetClientRect(_hWnd, &rect);
         _clientSize = Size(rect.right - rect.left, rect.bottom - rect.top);
+
+        PH_INFO("Created window '{0}' (Size: [{1}, {2}])", title, rect.right, rect.bottom);
     }
 
     void WindowsWindow::EnterSizeMove()
@@ -55,7 +60,10 @@ namespace Photon
 
     WindowsWindow::!WindowsWindow()
     {
-        DestroyWindow(_hWnd);
-        _hWnd = NULL;
+        if (_hWnd)
+        {
+            DestroyWindow(_hWnd);
+            _hWnd = NULL;
+        }
     }
 }

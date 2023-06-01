@@ -1,9 +1,9 @@
 #pragma once
-#include <Windows.h>
-#include <atlstr.h>
 
 namespace Photon
 {
+    using namespace Events;
+
     ref class WindowsPlatform;
 
     ref class WindowsWindow : public Window
@@ -27,12 +27,20 @@ namespace Photon
             {
                 return _clientSize;
             }
-        }
-        property System::IntPtr Handle
-        {
-            System::IntPtr get() override
+            void set(Size value) override
             {
-                return System::IntPtr(_hWnd);
+                _clientSize = value;
+            }
+        }
+        property bool VSync
+        {
+            bool get() override
+            {
+                return _vSync;
+            }
+            void set(bool value) override
+            {
+                _vSync = value;
             }
         }
         property bool InSizeMove
@@ -45,6 +53,21 @@ namespace Photon
 
         WindowsWindow(WindowsPlatform^ platform, System::String^ title, Size size, HINSTANCE hInstance);
 
+        void SetEventCallback(System::Action<PhotonEvent^>^ callback) override
+        {
+            _eventCallback = callback;
+        }
+
+        void OnEvent(PhotonEvent^ args)
+        {
+            PH_INFO(args->ToString());
+            if (_eventCallback == nullptr)
+            {
+                return;
+            }
+            _eventCallback(args);
+        }
+
         void Show();
 
         ~WindowsWindow()
@@ -55,14 +78,18 @@ namespace Photon
         !WindowsWindow();
 
     internal:
+        HWND _hWnd;
+
         void EnterSizeMove();
+        
         void ExitSizeMove();
 
     private:
         WindowsPlatform^ _platform;
-        HWND _hWnd;
         System::String^ _title;
         Size _clientSize;
+        bool _vSync;
         bool _inSizeMove;
+        System::Action<PhotonEvent^>^ _eventCallback;
     };
 }

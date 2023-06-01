@@ -1,19 +1,14 @@
-﻿namespace Photon;
+﻿using Photon.Events;
+
+namespace Photon;
 
 public abstract class Window : IDisposable
 {
     private bool _disposed;
 
     public abstract string Title { get; set; }
-    public abstract Size ClientSize { get; }
-    public abstract IntPtr Handle { get; }
-
-    public EventHandler<EventArgs>? SizeChanged { get; set; }
-
-    protected virtual void OnSizeChanged()
-    {
-        SizeChanged?.Invoke(this, EventArgs.Empty);
-    }
+    public abstract Size ClientSize { get; protected set; }
+    public abstract bool VSync { get; set; }
 
     protected virtual void Dispose(bool disposing)
     {
@@ -29,6 +24,8 @@ public abstract class Window : IDisposable
             _disposed = true;
         }
     }
+
+    public abstract void SetEventCallback(Action<PhotonEvent> callback);
 
     // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
     // ~Window()
