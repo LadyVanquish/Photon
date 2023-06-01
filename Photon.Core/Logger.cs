@@ -79,7 +79,7 @@ public sealed class Logger
     internal static Dictionary<string, Logger> Loggers { get; } = new();
 
 #if DEBUG
-    public static Logger WindowsLogger { get; } = new LoggerBuilder().WithName("WindowsLogger").WithVerbosityLevel(7).WriteToConsole().Build();
+    public static Logger WindowsLogger { get; } = new LoggerBuilder().WithName("Photon.Windows").WithVerbosityLevel(7).WriteToConsole().Build();
 #endif
 
     private readonly object _lock = new();

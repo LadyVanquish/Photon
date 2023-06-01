@@ -50,6 +50,21 @@ public enum KeyboardKey
     KanaMode,
 
     /// <summary>
+    /// The Hangul mode key.
+    /// </summary>
+    HangulMode = KanaMode,
+
+    /// <summary>
+    /// The Junja mode key.
+    /// </summary>
+    JunjaMode,
+
+    /// <summary>
+    /// The Final mode key.
+    /// </summary>
+    FinalMode,
+
+    /// <summary>
     /// The Hanja mode key.
     /// </summary>
     HanjaMode,
@@ -57,7 +72,7 @@ public enum KeyboardKey
     /// <summary>
     /// The Kanji mode key.
     /// </summary>
-    KanjiMode,
+    KanjiMode = HanjaMode,
 
     /// <summary>
     /// The Yen key.
