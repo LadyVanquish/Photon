@@ -36,9 +36,9 @@ public sealed class MouseScrolledEvent : PhotonEvent
 
 public abstract class MouseButtonEvent : PhotonEvent
 {
-    public int MouseButton { get; }
+    public MouseButton MouseButton { get; }
 
-    public MouseButtonEvent(int mouseButton) : base(EventCategory.MouseButton | EventCategory.Mouse | EventCategory.Input)
+    public MouseButtonEvent(MouseButton mouseButton) : base(EventCategory.MouseButton | EventCategory.Mouse | EventCategory.Input)
     {
         MouseButton = mouseButton;
     }
@@ -46,7 +46,7 @@ public abstract class MouseButtonEvent : PhotonEvent
 
 public sealed class MouseButtonPressedEvent : MouseButtonEvent
 {
-    public MouseButtonPressedEvent(int mouseButton) : base(mouseButton)
+    public MouseButtonPressedEvent(MouseButton mouseButton) : base(mouseButton)
     {
     }
 
@@ -58,7 +58,7 @@ public sealed class MouseButtonPressedEvent : MouseButtonEvent
 
 public sealed class MouseButtonReleasedEvent : MouseButtonEvent
 {
-    public MouseButtonReleasedEvent(int mouseButton) : base(mouseButton)
+    public MouseButtonReleasedEvent(MouseButton mouseButton) : base(mouseButton)
     {
     }
 

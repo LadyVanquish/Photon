@@ -43,6 +43,13 @@ namespace Photon
                 _vSync = value;
             }
         }
+        property float DPI
+        {
+            float get()
+            {
+                return _dpi;
+            }
+        }
         property bool InSizeMove
         {
             bool get()
@@ -91,5 +98,6 @@ namespace Photon
         bool _vSync;
         bool _inSizeMove;
         System::Action<PhotonEvent^>^ _eventCallback;
+        float _dpi;
     };
 }

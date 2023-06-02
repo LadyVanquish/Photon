@@ -56,6 +56,7 @@ namespace Photon
     void WindowsWindow::Show()
     {
         ShowWindow(_hWnd, SW_SHOWNORMAL);
+        _dpi = (float)GetDpiForWindow(_hWnd);
     }
 
     WindowsWindow::!WindowsWindow()

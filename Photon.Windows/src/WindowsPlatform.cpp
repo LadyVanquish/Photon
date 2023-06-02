@@ -420,6 +420,39 @@ namespace Photon
         }
         switch (message)
         {
+            case WM_MOUSEMOVE:
+                window->OnEvent(gcnew Events::MouseMovedEvent((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)));
+                return 0;
+            case WM_LBUTTONDOWN:
+                window->OnEvent(gcnew Events::MouseButtonPressedEvent(MouseButton::Left));
+                return 0;
+            case WM_LBUTTONUP:
+                window->OnEvent(gcnew Events::MouseButtonReleasedEvent(MouseButton::Left));
+                return 0;
+            case WM_RBUTTONDOWN:
+                window->OnEvent(gcnew Events::MouseButtonPressedEvent(MouseButton::Right));
+                return 0;
+            case WM_RBUTTONUP:
+                window->OnEvent(gcnew Events::MouseButtonReleasedEvent(MouseButton::Right));
+                return 0;
+            case WM_MBUTTONDOWN:
+                window->OnEvent(gcnew Events::MouseButtonPressedEvent(MouseButton::Middle));
+                return 0;
+            case WM_MBUTTONUP:
+                window->OnEvent(gcnew Events::MouseButtonReleasedEvent(MouseButton::Middle));
+                return 0;
+            case WM_XBUTTONDOWN:
+                window->OnEvent(gcnew Events::MouseButtonPressedEvent((MouseButton)((int)MouseButton::X1 - 1 + GET_XBUTTON_WPARAM(wParam))));
+                return 0;
+            case WM_XBUTTONUP:
+                window->OnEvent(gcnew Events::MouseButtonReleasedEvent((MouseButton)((int)MouseButton::X1 - 1 + GET_XBUTTON_WPARAM(wParam))));
+                return 0;
+            case WM_MOUSEWHEEL:
+                window->OnEvent(gcnew Events::MouseScrolledEvent((float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA, 0.0f));
+                return 0;
+            case WM_MOUSEHWHEEL:
+                window->OnEvent(gcnew Events::MouseScrolledEvent(0.0f, (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA));
+                return 0;
             case WM_KEYDOWN:
             case WM_SYSKEYDOWN:
                 window->OnEvent(gcnew Events::KeyPressedEvent((int)lParam & 0xFF, KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
@@ -427,6 +460,18 @@ namespace Photon
             case WM_KEYUP:
             case WM_SYSKEYUP:
                 window->OnEvent(gcnew Events::KeyReleasedEvent(KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
+                return 0;
+            case WM_ACTIVATE:
+                switch (LOWORD(wParam))
+                {
+                    case WA_ACTIVE:
+                    case WA_CLICKACTIVE:
+                        window->OnEvent(gcnew Events::WindowActivateEvent(window->Title));
+                        break;
+                    case WA_INACTIVE:
+                        window->OnEvent(gcnew Events::WindowDeactivateEvent(window->Title));
+                        break;
+                }
                 return 0;
             case WM_ENTERSIZEMOVE:
                 window->EnterSizeMove();

@@ -7,6 +7,7 @@
 #include <atlstr.h>
 
 #include <Windows.h>
+#include <windowsx.h>
 
 #include "Log.h"
 #include "Core.h"
