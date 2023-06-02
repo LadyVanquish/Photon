@@ -7,7 +7,10 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Photon</RootNamespace>
     <Platforms>x64</Platforms>
-    <BaseOutputPath>$(SolutionDir)bin\$(Configuration)-$(Platform)\</BaseOutputPath>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>
 
