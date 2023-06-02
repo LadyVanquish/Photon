@@ -366,9 +366,47 @@ namespace Photon
                 return KeyboardKey::Slash;
             case VK_OEM_3:
                 return KeyboardKey::Grave;
+            case VK_OEM_4:
+                return KeyboardKey::LBracket;
+            case VK_OEM_5:
+                return KeyboardKey::Backslash;
+            case VK_OEM_6:
+                return KeyboardKey::RBracket;
+            case VK_OEM_7:
+                return KeyboardKey::Quote;
+            case VK_OEM_AX:
+                return KeyboardKey::OemAx;
+            case VK_OEM_102:
+                return KeyboardKey::IntlBackslash;
+            case VK_PROCESSKEY:
+                return KeyboardKey::ProcessKey;
+            case VK_OEM_ATTN:
+                return KeyboardKey::Attn;
+            case VK_OEM_FINISH:
+                return KeyboardKey::Katakana;
+            case VK_OEM_COPY:
+                return KeyboardKey::Hiragana;
+                // VK_OEM_ENLW
+                // VK_OEM_BACKTAB
+            case VK_ATTN:
+                return KeyboardKey::Attn;
+            case VK_CRSEL:
+                return KeyboardKey::Crsel;
+            case VK_EXSEL:
+                return KeyboardKey::Exsel;
+            case VK_EREOF:
+                return KeyboardKey::EraseEof;
+            case VK_PLAY:
+                return KeyboardKey::Play;
+            case VK_ZOOM:
+                return KeyboardKey::Zoom;
+                // VK_NONAME
+            case VK_PA1:
+                return KeyboardKey::Pa1;
+            case VK_OEM_CLEAR:
+                return KeyboardKey::OemClear;
             default:
-                PH_WARNING("TODO: Key has no mapping.");
-                // TODO: continue
+                PH_WARNING("TODO: Key '{0}' has no mapping.", virtualKey);
         }
         return KeyboardKey::None;
     }
@@ -383,7 +421,12 @@ namespace Photon
         switch (message)
         {
             case WM_KEYDOWN:
+            case WM_SYSKEYDOWN:
                 window->OnEvent(gcnew Events::KeyPressedEvent((int)lParam & 0xFF, KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
+                return 0;
+            case WM_KEYUP:
+            case WM_SYSKEYUP:
+                window->OnEvent(gcnew Events::KeyReleasedEvent(KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
                 return 0;
             case WM_ENTERSIZEMOVE:
                 window->EnterSizeMove();
