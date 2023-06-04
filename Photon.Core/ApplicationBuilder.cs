@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Photon.Window;
 
 namespace Photon;
 
@@ -7,7 +8,7 @@ public sealed class ApplicationBuilder
     private Type? _platformType;
     private Type? _applicationType;
     private string _title = GetDefaultTitleName();
-    private Size _size = new(1280, 720);
+    private Rectangle _positionAndSize = new(-1, -1, 1280, 720);
 
     private static string? GetAssemblyTitle(Assembly? assembly)
     {
@@ -54,9 +55,29 @@ public sealed class ApplicationBuilder
         return this;
     }
 
+    public ApplicationBuilder UsePosition(int x, int y)
+    {
+        _positionAndSize.X = x;
+        _positionAndSize.Y = y;
+        return this;
+    }
+
+    public ApplicationBuilder UsePosition(Point position)
+    {
+        _positionAndSize.Location = position;
+        return this;
+    }
+
+    public ApplicationBuilder UseSize(int width, int height)
+    {
+        _positionAndSize.Width = width;
+        _positionAndSize.Height = height;
+        return this;
+    }
+
     public ApplicationBuilder UseSize(Size size)
     {
-        _size = size;
+        _positionAndSize.Size = size;
         return this;
     }
 
@@ -70,7 +91,7 @@ public sealed class ApplicationBuilder
         {
             throw new NotImplementedException();
         }
-        AppPlatform platform = (Activator.CreateInstance(_platformType, _title, _size) as AppPlatform)!;
+        AppPlatform platform = (Activator.CreateInstance(_platformType, _title, _positionAndSize) as AppPlatform)!;
         Application application = (Activator.CreateInstance(_applicationType, platform) as Application)!;
         platform.Application = application;
         return application;

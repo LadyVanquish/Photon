@@ -7,7 +7,7 @@ public abstract class AppPlatform : IDisposable
 
     public Application? Application { get; internal set; }
     public abstract bool IsBlockingRun { get; }
-    public abstract Window? MainWindow { get; }
+    public abstract PhotonWindow? MainWindow { get; }
 
     public event EventHandler<EventArgs>? Ready;
     public event EventHandler<EventArgs>? Activated;

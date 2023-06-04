@@ -6,7 +6,7 @@ namespace Photon
 
     ref class WindowsPlatform;
 
-    ref class WindowsWindow : public Window
+    ref class WindowsWindow : public PhotonWindow
     {
     public:
         property System::String^ Title
@@ -21,13 +21,13 @@ namespace Photon
                 SetWindowText(_hWnd, CString(_title));
             }
         }
-        property Size ClientSize
+        property Window::Size ClientSize
         {
-            Size get() override
+            Window::Size get() override
             {
                 return _clientSize;
             }
-            void set(Size value) override
+            void set(Window::Size value) override
             {
                 _clientSize = value;
             }
@@ -42,7 +42,7 @@ namespace Photon
             {
                 _vSync = value;
             }
-        }
+                }
         property float DPI
         {
             float get()
@@ -58,34 +58,51 @@ namespace Photon
             }
         }
 
-        WindowsWindow(WindowsPlatform^ platform, System::String^ title, Size size, HINSTANCE hInstance);
-
-        void SetEventCallback(System::Action<PhotonEvent^>^ callback) override
-        {
-            _eventCallback = callback;
-        }
+        WindowsWindow(WindowsPlatform^ platform, System::String^ title, Window::Rectangle positionAndSize, HINSTANCE hInstance);
 
         void OnEvent(PhotonEvent^ args)
         {
             PH_INFO(args->ToString());
-            if (_eventCallback == nullptr)
-            {
-                return;
-            }
-            _eventCallback(args);
+            ProcessEvent(args);
         }
 
         void Show();
 
+    protected:
         ~WindowsWindow()
         {
+            if (_disposed)
+            {
+                return;
+            }
             this->!WindowsWindow();
         }
 
-        !WindowsWindow();
-
     internal:
         HWND _hWnd;
+
+        property LONG WindowStyle
+        {
+            LONG get()
+            {
+                return GetWindowLong(_hWnd, GWL_STYLE);
+            }
+            void set(LONG value)
+            {
+                SetWindowLong(_hWnd, GWL_STYLE, value);
+            }
+        }
+        property LONG WindowExStyle
+        {
+            LONG get()
+            {
+                return GetWindowLong(_hWnd, GWL_EXSTYLE);
+            }
+            void set(LONG value)
+            {
+                SetWindowLong(_hWnd, GWL_EXSTYLE, value);
+            }
+        }
 
         void EnterSizeMove();
         
@@ -94,10 +111,14 @@ namespace Photon
     private:
         WindowsPlatform^ _platform;
         System::String^ _title;
-        Size _clientSize;
+        Window::Size _clientSize;
         bool _vSync;
         bool _inSizeMove;
-        System::Action<PhotonEvent^>^ _eventCallback;
         float _dpi;
+        bool _disposed;
+
+
+
+        !WindowsWindow();
     };
 }

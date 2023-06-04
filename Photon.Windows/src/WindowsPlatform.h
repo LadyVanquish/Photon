@@ -7,7 +7,7 @@ namespace Photon
     public ref class WindowsPlatform : public AppPlatform
     {
     public:
-        WindowsPlatform(System::String^ title, Size size);
+        WindowsPlatform(System::String^ title, Window::Rectangle size);
         ~WindowsPlatform();
 
         property bool IsBlockingRun
@@ -17,9 +17,9 @@ namespace Photon
                 return true;
             }
         }
-        property Window^ MainWindow
+        property PhotonWindow^ MainWindow
         {
-            Window^ get() override
+            PhotonWindow^ get() override
             {
                 return _mainWindow;
             }

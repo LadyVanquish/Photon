@@ -1,14 +1,41 @@
 ﻿using Photon.Events;
+using Photon.Window;
 
 namespace Photon;
 
-public abstract class Window : IDisposable
+public abstract class PhotonWindow : IDisposable
 {
     private bool _disposed;
+    private bool _active;
 
     public abstract string Title { get; set; }
     public abstract Size ClientSize { get; protected set; }
     public abstract bool VSync { get; set; }
+    public bool Active
+    {
+        get => _active;
+        private set
+        {
+            if (_active == value)
+            {
+                return;
+            }
+            _active = value;
+            if (_active)
+            {
+                OnActivated?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                OnDeactivated?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+    public abstract bool AllowTransparency { get; set; }
+
+    public event EventHandler? OnActivated;
+    public event EventHandler? OnDeactivated;
+
 
     protected virtual void Dispose(bool disposing)
     {
@@ -25,7 +52,19 @@ public abstract class Window : IDisposable
         }
     }
 
-    public abstract void SetEventCallback(Action<PhotonEvent> callback);
+    protected void ProcessEvent(PhotonEvent args)
+    {
+        if (args is WindowActivateEvent windowActivateEvent)
+        {
+            Active = windowActivateEvent.IsActive;
+            return;
+        }
+        // Don't process events while inactive
+        if (!Active)
+        {
+            return;
+        }
+    }
 
     // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
     // ~Window()
