@@ -21,17 +21,6 @@ namespace Photon
                 SetWindowText(_hWnd, CString(_title));
             }
         }
-        property Window::Size ClientSize
-        {
-            Window::Size get() override
-            {
-                return _clientSize;
-            }
-            void set(Window::Size value) override
-            {
-                _clientSize = value;
-            }
-        }
         property bool VSync
         {
             bool get() override
@@ -111,13 +100,10 @@ namespace Photon
     private:
         WindowsPlatform^ _platform;
         System::String^ _title;
-        Window::Size _clientSize;
         bool _vSync;
         bool _inSizeMove;
         float _dpi;
         bool _disposed;
-
-
 
         !WindowsWindow();
     };

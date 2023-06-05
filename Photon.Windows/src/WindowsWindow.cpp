@@ -9,26 +9,24 @@ namespace Photon
     {
         _platform = platform;
         _title = title;
-        if (positionAndSize.X == -1)
-        {
-            positionAndSize.X = (GetSystemMetrics(SM_CXSCREEN) - positionAndSize.Width) / 2;
-        }
-        if (positionAndSize.Y == -1)
-        {
-            positionAndSize.Y = (GetSystemMetrics(SM_CYSCREEN) - positionAndSize.Height) / 2;
-        }
 
-        PH_INFO("Creating window '{0}' (Size: [{1}, {2}])", title, positionAndSize.Width, positionAndSize.Height);
+        RECT rect {};
+        rect.left = positionAndSize.X == -1 ? (GetSystemMetrics(SM_CXSCREEN) - positionAndSize.Width) / 2 : positionAndSize.X;
+        rect.top = positionAndSize.Y == -1 ? (GetSystemMetrics(SM_CYSCREEN) - positionAndSize.Height) / 2 : positionAndSize.Y;
+        rect.right = rect.left + positionAndSize.Width;
+        rect.bottom = rect.top + positionAndSize.Height;
+
+        PH_INFO("Creating window '{0}' at [{1}, {2}] with size: [{3}, {4}].", title, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
 
         AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, false, WS_EX_APPWINDOW);
         _hWnd = CreateWindowEx(WS_EX_APPWINDOW,
                                L"PhotonWindow",
                                CString(title),
                                WS_OVERLAPPEDWINDOW,
-                               positionAndSize.X,
-                               positionAndSize.Y,
-                               positionAndSize.Width,
-                               positionAndSize.Height,
+                               rect.left,
+                               rect.top,
+                               rect.right - rect.left,
+                               rect.bottom - rect.top,
                                NULL,
                                NULL,
                                hInstance,
@@ -39,11 +37,10 @@ namespace Photon
             throw gcnew System::InvalidOperationException(gcnew System::String(message.c_str()));
         }
 
-        RECT rect {};
         GetClientRect(_hWnd, &rect);
-        //_clientSize = Size(rect.right - rect.left, rect.bottom - rect.top);
+        ClientArea = Window::Size(rect.right - rect.left, rect.bottom - rect.top);
 
-        PH_INFO("Created window '{0}' (Size: [{1}, {2}])", title, rect.right, rect.bottom);
+        PH_INFO("Created window '{0}' with surface area: [{1}, {2}].", title, ClientArea.Width, ClientArea.Height);
     }
 
     void WindowsWindow::EnterSizeMove()
@@ -56,7 +53,7 @@ namespace Photon
         _inSizeMove = false;
         RECT rect {};
         GetClientRect(_hWnd, &rect);
-        //_clientSize = Size(rect.right - rect.left, rect.bottom - rect.top);
+        ClientArea = Window::Size(rect.right - rect.left, rect.bottom - rect.top);
     }
 
     void WindowsWindow::Show()

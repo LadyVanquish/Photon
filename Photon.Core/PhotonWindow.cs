@@ -9,7 +9,7 @@ public abstract class PhotonWindow : IDisposable
     private bool _active;
 
     public abstract string Title { get; set; }
-    public abstract Size ClientSize { get; protected set; }
+    public Size ClientArea { get; protected set; }
     public abstract bool VSync { get; set; }
     public bool Active
     {
@@ -31,7 +31,6 @@ public abstract class PhotonWindow : IDisposable
             }
         }
     }
-    public abstract bool AllowTransparency { get; set; }
 
     public event EventHandler? OnActivated;
     public event EventHandler? OnDeactivated;

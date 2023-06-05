@@ -12,7 +12,7 @@ public abstract class Application : IDisposable
 
     public PhotonWindow? MainWindow => _platform.MainWindow;
     public bool EnableVerticalSync { get; set; } = true;
-    public float AspectRatio => MainWindow is null ? 0.0f : (float)MainWindow.ClientSize.Width / MainWindow.ClientSize.Height;
+    public float AspectRatio => MainWindow is null ? 0.0f : (float)MainWindow.ClientArea.Width / MainWindow.ClientArea.Height;
 
     public event EventHandler<EventArgs>? Disposed;
 
