@@ -3,17 +3,30 @@
 public sealed class WindowActivateEvent : PhotonEvent
 {
     public string Title { get; }
-    public bool IsActive { get; }
 
-    public WindowActivateEvent(string title, bool isActive) : base(EventCategory.Application)
+    public WindowActivateEvent(string title) : base(EventCategory.Application)
     {
         Title = title;
-        IsActive = isActive;
     }
 
     public override string ToString()
     {
-        return $"{nameof(WindowActivateEvent)}: {Title} {(IsActive ? "active" : "inactive")}";
+        return $"{nameof(WindowActivateEvent)}: {Title}";
+    }
+}
+
+public sealed class WindowDeactivateEvent : PhotonEvent
+{
+    public string Title { get; }
+
+    public WindowDeactivateEvent(string title) : base(EventCategory.Application)
+    {
+        Title = title;
+    }
+
+    public override string ToString()
+    {
+        return $"{nameof(WindowDeactivateEvent)}: {Title}";
     }
 }
 

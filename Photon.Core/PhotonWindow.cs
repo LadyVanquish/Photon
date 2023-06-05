@@ -53,9 +53,14 @@ public abstract class PhotonWindow : IDisposable
 
     protected void ProcessEvent(PhotonEvent args)
     {
-        if (args is WindowActivateEvent windowActivateEvent)
+        if (args is WindowActivateEvent)
         {
-            Active = windowActivateEvent.IsActive;
+            Active = true;
+            return;
+        }
+        if (args is WindowDeactivateEvent)
+        {
+            Active = false;
             return;
         }
         // Don't process events while inactive
