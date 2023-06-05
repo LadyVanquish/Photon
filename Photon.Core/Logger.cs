@@ -25,7 +25,7 @@ public enum LogEventType : ushort
 
 public delegate void LogWriteHandler(string source, LogEventType eventType, string message, object[]? parameters);
 
-public sealed class Logger
+public sealed class Logger : IDisposable
 {
     private readonly struct InternalScopedTrace : IDisposable
     {
@@ -34,7 +34,7 @@ public sealed class Logger
 
         public InternalScopedTrace(Logger logger, string message)
         {
-            lock (logger._lock)
+            lock (logger._instanceLock)
             {
                 _logger = logger;
                 _message = message;
@@ -45,7 +45,7 @@ public sealed class Logger
 
         public void Dispose()
         {
-            lock (_logger._lock)
+            lock (_logger._instanceLock)
             {
                 --_logger.IndentLevel;
                 _logger.Output(LogEventType.Scope, $"Leaving: {_message}");
@@ -74,7 +74,8 @@ public sealed class Logger
         LogEventType.All
     };
 
-    private static readonly Logger _nullLogger = new("NullLogger");
+    private static readonly Logger _nullLogger = new("NullLogger", null, null);
+    private static readonly object _lock = new();
 
     internal static Dictionary<string, Logger> Loggers { get; } = new();
 
@@ -82,17 +83,20 @@ public sealed class Logger
     public static Logger WindowsLogger { get; } = new LoggerBuilder().WithName("Photon.Windows").WithVerbosityLevel(7).WriteToConsole().Build();
 #endif
 
-    private readonly object _lock = new();
+    private readonly object _instanceLock = new();
     private readonly string _name;
+    private readonly LogWriteHandler? _handler;
+    private readonly Action? _dispose;
 
     internal LogEventType LogMask { get; private set; }
 
     public int IndentLevel { get; private set; }
-    public LogWriteHandler? WriteHandler { get; internal set; }
 
-    internal Logger(string name)
+    internal Logger(string name, LogWriteHandler? handler, Action? dispose)
     {
         _name = name;
+        _handler = handler;
+        _dispose = dispose;
     }
 
     private static string GetCallingMethodInfo(string additionalInfo)
@@ -124,7 +128,7 @@ public sealed class Logger
 
     public void Output(LogEventType eventType, string message, object[]? parameters = null)
     {
-        WriteHandler?.Invoke(_name, eventType, string.Concat(new string(' ', IndentLevel * 4), message), parameters);
+        _handler?.Invoke(_name, eventType, string.Concat(new string(' ', IndentLevel * 4), message), parameters);
     }
 
     public IDisposable LogMethod(string additionalInfo = "")
@@ -148,5 +152,22 @@ public sealed class Logger
             return;
         }
         Output(eventType, stringHandler.ToString(), null);
+    }
+
+    public void Dispose()
+    {
+        _dispose?.Invoke();
+    }
+
+    public static void Close()
+    {
+        lock (_lock)
+        {
+            foreach (Logger logger in Loggers.Values)
+            {
+                logger.Dispose();
+            }
+            Loggers.Clear();
+        }
     }
 }

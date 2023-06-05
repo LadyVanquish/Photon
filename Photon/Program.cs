@@ -12,3 +12,4 @@ using (Application app = builder.Build())
 {
     app.Run();
 }
+Logger.Close();

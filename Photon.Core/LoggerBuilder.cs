@@ -7,11 +7,11 @@ namespace Photon;
 
 public sealed class LoggerBuilder
 {
-    private sealed class FileWriter
+    private sealed class StreamWriter
     {
         private readonly Stream _stream;
 
-        public FileWriter(Stream stream)
+        public StreamWriter(Stream stream)
         {
             _stream = stream;
         }
@@ -28,10 +28,38 @@ public sealed class LoggerBuilder
         }
     }
 
+    private sealed class FileWriter : IDisposable
+    {
+        private readonly Stream _stream;
+
+        public FileWriter(string file)
+        {
+            _stream = File.Create(file);
+        }
+
+        public void Handle(string source, LogEventType eventType, string message, object[]? parameters)
+        {
+            if (parameters is not null && parameters.Length > 0)
+            {
+                // TODO: format
+                Console.WriteLine($"TODO: {nameof(LoggerBuilder)}.{nameof(FileWriter)}.{nameof(Handle)}() implement format with named parameters.");
+                message = string.Format(CultureInfo.InvariantCulture, message, parameters);
+            }
+            _stream.Write(Encoding.UTF8.GetBytes($"[{DateTime.Now} {source}] {eventType}: {message}"));
+        }
+
+        public void Dispose()
+        {
+            _stream.Flush();
+            _stream.Dispose();
+        }
+    }
+
     private static readonly int _messageSpace = typeof(LogEventType).GetEnumNames().Select(x => x.Length).Max() + 1;
 
     private string _name;
     private LogWriteHandler? _handler;
+    private Action? _disposeHandler;
     private int _verbosity = 3;
 
     public LoggerBuilder()
@@ -99,14 +127,26 @@ public sealed class LoggerBuilder
 
     public LoggerBuilder WriteToStream(Stream stream)
     {
-        FileWriter writer = new(stream);
+        StreamWriter writer = new(stream);
         _handler += writer.Handle;
         return this;
     }
 
-    public LoggerBuilder WriteToCustom(LogWriteHandler handler)
+    public LoggerBuilder WriteToFile(string file)
+    {
+        FileWriter writer = new(file);
+        _handler += writer.Handle;
+        _disposeHandler += writer.Dispose;
+        return this;
+    }
+
+    public LoggerBuilder WriteToCustom(LogWriteHandler handler, Action? dispose)
     {
         _handler += handler;
+        if (dispose is not null)
+        {
+            _disposeHandler += dispose;
+        }
         return this;
     }
 
@@ -125,9 +165,8 @@ public sealed class LoggerBuilder
     public Logger Build()
     {
         Debug.Assert(!Logger.Loggers.TryGetValue(_name, out _));
-        Logger logger = new(_name);
+        Logger logger = new(_name, _handler, _disposeHandler);
         Logger.Loggers.Add(_name, logger);
-        logger.WriteHandler = _handler;
         logger.SetLogLevel(_verbosity);
         return logger;
     }

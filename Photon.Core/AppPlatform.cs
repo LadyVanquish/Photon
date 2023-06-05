@@ -10,8 +10,6 @@ public abstract class AppPlatform : IDisposable
     public abstract PhotonWindow? MainWindow { get; }
 
     public event EventHandler<EventArgs>? Ready;
-    public event EventHandler<EventArgs>? Activated;
-    public event EventHandler<EventArgs>? Deactivated;
 
     protected AppPlatform()
     {
@@ -20,16 +18,6 @@ public abstract class AppPlatform : IDisposable
     protected void OnReady()
     {
         Ready?.Invoke(this, EventArgs.Empty);
-    }
-
-    protected void OnActivated()
-    {
-        Activated?.Invoke(this, EventArgs.Empty);
-    }
-
-    protected void OnDeactivated()
-    {
-        Deactivated?.Invoke(this, EventArgs.Empty);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -50,6 +38,11 @@ public abstract class AppPlatform : IDisposable
     public abstract void Run();
 
     public abstract void RequestExit();
+
+    protected void OnExit(int exitCode)
+    {
+        Application?.OnPlatformExit(exitCode);
+    }
 
     public void Dispose()
     {

@@ -542,6 +542,7 @@ namespace Photon
                 Application->Tick();
             }
         }
+        OnExit((int)msg.wParam);
     }
 
     void WindowsPlatform::RequestExit()

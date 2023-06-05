@@ -58,39 +58,3 @@ public sealed class WindowCloseEvent : PhotonEvent
         return nameof(WindowCloseEvent);
     }
 }
-
-public sealed class ApplicationTickEvent : PhotonEvent
-{
-    public ApplicationTickEvent() : base(EventCategory.Application)
-    {
-    }
-
-    public override string ToString()
-    {
-        return nameof(ApplicationTickEvent);
-    }
-}
-
-public sealed class ApplicationUpdateEvent : PhotonEvent
-{
-    public ApplicationUpdateEvent() : base(EventCategory.Application)
-    {
-    }
-
-    public override string ToString()
-    {
-        return nameof(ApplicationUpdateEvent);
-    }
-}
-
-public sealed class ApplicationRenderEvent : PhotonEvent
-{
-    public ApplicationRenderEvent() : base(EventCategory.Application)
-    {
-    }
-
-    public override string ToString()
-    {
-        return nameof(ApplicationRenderEvent);
-    }
-}

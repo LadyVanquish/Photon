@@ -14,7 +14,7 @@ public abstract class Application : IDisposable
     public bool EnableVerticalSync { get; set; } = true;
     public float AspectRatio => MainWindow is null ? 0.0f : (float)MainWindow.ClientArea.Width / MainWindow.ClientArea.Height;
 
-    public event EventHandler<EventArgs>? Disposed;
+    public event EventHandler<ExitEventArgs>? Exit;
 
     public Application(AppPlatform platform)
     {
@@ -41,15 +41,16 @@ public abstract class Application : IDisposable
 
     protected virtual void OnKeyboardEvent(KeyboardKey key, bool pressed)
     {
-        if (key == KeyboardKey.Escape && pressed)
-        {
-            Exit();
-        }
     }
 
     internal void HandlePlatformReady(object? sender, EventArgs args)
     {
         Initialize();
+    }
+
+    internal void OnPlatformExit(int exitCode)
+    {
+        Exit?.Invoke(this, new ExitEventArgs(exitCode));
     }
 
     internal void OnPlatformKeyboardEvent(KeyboardKey key, bool pressed)
@@ -69,7 +70,7 @@ public abstract class Application : IDisposable
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
+                Current = null;
             }
 
             // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -91,15 +92,6 @@ public abstract class Application : IDisposable
     public void Run()
     {
         _platform.Run();
-
-        if (_platform.IsBlockingRun)
-        {
-        }
-    }
-
-    public void Exit()
-    {
-        _platform.RequestExit();
     }
 
     public void Dispose()
