@@ -7,14 +7,9 @@ namespace Photon;
 
 public sealed class LoggerBuilder
 {
-    private sealed class StreamWriter
+    private sealed class StreamWriter(Stream stream)
     {
-        private readonly Stream _stream;
-
-        public StreamWriter(Stream stream)
-        {
-            _stream = stream;
-        }
+        private readonly Stream _stream = stream;
 
         public void Handle(string source, LogEventType eventType, string message, object[]? parameters)
         {
@@ -28,14 +23,9 @@ public sealed class LoggerBuilder
         }
     }
 
-    private sealed class FileWriter : IDisposable
+    private sealed class FileWriter(string file) : IDisposable
     {
-        private readonly Stream _stream;
-
-        public FileWriter(string file)
-        {
-            _stream = File.Create(file);
-        }
+        private readonly FileStream _stream = File.Create(file);
 
         public void Handle(string source, LogEventType eventType, string message, object[]? parameters)
         {

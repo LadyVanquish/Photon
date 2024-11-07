@@ -1,13 +1,8 @@
 ﻿namespace Photon.Events;
 
-public sealed class WindowActivateEvent : PhotonEvent
+public sealed class WindowActivateEvent(string title) : PhotonEvent(EventCategory.Application)
 {
-    public string Title { get; }
-
-    public WindowActivateEvent(string title) : base(EventCategory.Application)
-    {
-        Title = title;
-    }
+    public string Title { get; } = title;
 
     public override string ToString()
     {
@@ -15,14 +10,9 @@ public sealed class WindowActivateEvent : PhotonEvent
     }
 }
 
-public sealed class WindowDeactivateEvent : PhotonEvent
+public sealed class WindowDeactivateEvent(string title) : PhotonEvent(EventCategory.Application)
 {
-    public string Title { get; }
-
-    public WindowDeactivateEvent(string title) : base(EventCategory.Application)
-    {
-        Title = title;
-    }
+    public string Title { get; } = title;
 
     public override string ToString()
     {
@@ -30,16 +20,10 @@ public sealed class WindowDeactivateEvent : PhotonEvent
     }
 }
 
-public sealed class WindowResizeEvent : PhotonEvent
+public sealed class WindowResizeEvent(uint width, uint height) : PhotonEvent(EventCategory.Application)
 {
-    public uint Width { get; }
-    public uint Height { get; }
-
-    public WindowResizeEvent(uint width, uint height) : base(EventCategory.Application)
-    {
-        Width = width;
-        Height = height;
-    }
+    public uint Width { get; } = width;
+    public uint Height { get; } = height;
 
     public override string ToString()
     {

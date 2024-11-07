@@ -1,23 +1,13 @@
 ﻿namespace Photon.Events;
 
-public abstract class KeyEvent : PhotonEvent
+public abstract class KeyEvent(KeyboardKey keyCode) : PhotonEvent(EventCategory.Keyboard | EventCategory.Input)
 {
-    public KeyboardKey KeyCode { get; }
-
-    public KeyEvent(KeyboardKey keyCode) : base(EventCategory.Keyboard | EventCategory.Input)
-    {
-        KeyCode = keyCode;
-    }
+    public KeyboardKey KeyCode { get; } = keyCode;
 }
 
-public sealed class KeyPressedEvent : KeyEvent
+public sealed class KeyPressedEvent(int repeatCount, KeyboardKey keyCode) : KeyEvent(keyCode)
 {
-    public int RepeatCount { get; }
-
-    public KeyPressedEvent(int repeatCount, KeyboardKey keyCode) : base(keyCode)
-    {
-        RepeatCount = repeatCount;
-    }
+    public int RepeatCount { get; } = repeatCount;
 
     public override string ToString()
     {
@@ -25,12 +15,8 @@ public sealed class KeyPressedEvent : KeyEvent
     }
 }
 
-public sealed class KeyReleasedEvent : KeyEvent
+public sealed class KeyReleasedEvent(KeyboardKey keyCode) : KeyEvent(keyCode)
 {
-    public KeyReleasedEvent(KeyboardKey keyCode) : base(keyCode)
-    {
-    }
-
     public override string ToString()
     {
         return $"{nameof(KeyReleasedEvent)}: {KeyCode}";

@@ -19,16 +19,11 @@ public static class EventLoggerExtensions
     }
 }
 
-public abstract class PhotonEvent
+public abstract class PhotonEvent(EventCategory category)
 {
     internal bool _handled;
 
-    public EventCategory Category { get; }
-
-    public PhotonEvent(EventCategory category)
-    {
-        Category = category;
-    }
+    public EventCategory Category { get; } = category;
 
     public bool InCategory(EventCategory category)
     {
@@ -36,14 +31,9 @@ public abstract class PhotonEvent
     }
 }
 
-public sealed class EventDispatcher
+public sealed class EventDispatcher(PhotonEvent args)
 {
-    private readonly PhotonEvent _event;
-
-    public EventDispatcher(PhotonEvent args)
-    {
-        _event = args;
-    }
+    private readonly PhotonEvent _event = args;
 
     public bool Dispatch<T>(Func<T, bool> func) where T : PhotonEvent
     {

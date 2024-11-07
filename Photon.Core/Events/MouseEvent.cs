@@ -1,15 +1,9 @@
 ﻿namespace Photon.Events;
 
-public sealed class MouseMovedEvent : PhotonEvent
+public sealed class MouseMovedEvent(float x, float y) : PhotonEvent(EventCategory.Mouse | EventCategory.Input)
 {
-    public float X { get; }
-    public float Y { get; }
-
-    public MouseMovedEvent(float x, float y) : base(EventCategory.Mouse | EventCategory.Input)
-    {
-        X = x;
-        Y = y;
-    }
+    public float X { get; } = x;
+    public float Y { get; } = y;
 
     public override string ToString()
     {
@@ -17,16 +11,10 @@ public sealed class MouseMovedEvent : PhotonEvent
     }
 }
 
-public sealed class MouseScrolledEvent : PhotonEvent
+public sealed class MouseScrolledEvent(float xOffset, float yOffset) : PhotonEvent(EventCategory.Mouse | EventCategory.Input)
 {
-    public float XOffset { get; }
-    public float YOffset { get; }
-
-    public MouseScrolledEvent(float xOffset, float yOffset) : base(EventCategory.Mouse | EventCategory.Input)
-    {
-        XOffset = xOffset;
-        YOffset = yOffset;
-    }
+    public float XOffset { get; } = xOffset;
+    public float YOffset { get; } = yOffset;
 
     public override string ToString()
     {
@@ -34,34 +22,21 @@ public sealed class MouseScrolledEvent : PhotonEvent
     }
 }
 
-public abstract class MouseButtonEvent : PhotonEvent
+public abstract class MouseButtonEvent(MouseButton mouseButton) : PhotonEvent(EventCategory.MouseButton | EventCategory.Mouse | EventCategory.Input)
 {
-    public MouseButton MouseButton { get; }
-
-    public MouseButtonEvent(MouseButton mouseButton) : base(EventCategory.MouseButton | EventCategory.Mouse | EventCategory.Input)
-    {
-        MouseButton = mouseButton;
-    }
+    public MouseButton MouseButton { get; } = mouseButton;
 }
 
-public sealed class MouseButtonPressedEvent : MouseButtonEvent
+public sealed class MouseButtonPressedEvent(MouseButton mouseButton) : MouseButtonEvent(mouseButton)
 {
-    public MouseButtonPressedEvent(MouseButton mouseButton) : base(mouseButton)
-    {
-    }
-
     public override string ToString()
     {
         return $"{nameof(MouseButtonPressedEvent)}: {MouseButton}";
     }
 }
 
-public sealed class MouseButtonReleasedEvent : MouseButtonEvent
+public sealed class MouseButtonReleasedEvent(MouseButton mouseButton) : MouseButtonEvent(mouseButton)
 {
-    public MouseButtonReleasedEvent(MouseButton mouseButton) : base(mouseButton)
-    {
-    }
-
     public override string ToString()
     {
         return $"{nameof(MouseButtonReleasedEvent)}: {MouseButton}";
