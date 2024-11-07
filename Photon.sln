@@ -5,9 +5,11 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Photon", "Photon\Photon.csproj", "{B1FF4B30-C087-4C2B-B5E2-D94BDC9F17D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.Core", "Photon.Core\Photon.Core.csproj", "{159EC87F-3125-4636-B7B7-01C6D74E4D12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Photon.Core", "Photon.Core\Photon.Core.csproj", "{159EC87F-3125-4636-B7B7-01C6D74E4D12}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Photon.Windows", "Photon.Windows\Photon.Windows.vcxproj", "{AF0E6962-D317-47CA-9EAB-D65E04928506}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.Game", "Photon.Game\Photon.Game.csproj", "{D4DD0412-6F53-4B35-B8D3-CC338B46FA37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AF0E6962-D317-47CA-9EAB-D65E04928506}.Debug|x64.Build.0 = Debug|x64
 		{AF0E6962-D317-47CA-9EAB-D65E04928506}.Release|x64.ActiveCfg = Release|x64
 		{AF0E6962-D317-47CA-9EAB-D65E04928506}.Release|x64.Build.0 = Release|x64
+		{D4DD0412-6F53-4B35-B8D3-CC338B46FA37}.Debug|x64.ActiveCfg = Debug|x64
+		{D4DD0412-6F53-4B35-B8D3-CC338B46FA37}.Debug|x64.Build.0 = Debug|x64
+		{D4DD0412-6F53-4B35-B8D3-CC338B46FA37}.Release|x64.ActiveCfg = Release|x64
+		{D4DD0412-6F53-4B35-B8D3-CC338B46FA37}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

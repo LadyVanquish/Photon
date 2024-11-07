@@ -513,16 +513,6 @@ namespace Photon
         Windows->Add(System::IntPtr(_mainWindow->_hWnd), _mainWindow);
     }
 
-    WindowsPlatform::~WindowsPlatform()
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        _disposed = true;
-    }
-
     void WindowsPlatform::Run()
     {
         OnReady();
@@ -548,5 +538,10 @@ namespace Photon
     void WindowsPlatform::RequestExit()
     {
         PostQuitMessage(0);
+    }
+
+    WindowsPlatform::!WindowsPlatform()
+    {
+
     }
 }

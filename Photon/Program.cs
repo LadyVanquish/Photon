@@ -2,7 +2,7 @@
 
 ApplicationBuilder builder = new();
 builder.UsePlatform<WindowsPlatform>()
-       .UseApplication<PhotonApplication>();
+       .UseApplication<GameApplication>();
 
 LoggerBuilder loggerBuilder = new();
 loggerBuilder.WriteToConsole()

@@ -6,13 +6,25 @@ namespace Photon
     {
     public:
         D3D12Application(AppPlatform^ platform);
-        ~D3D12Application() override
-        {
-            this->!D3D12Application();
-        }
+
     protected:
-        !D3D12Application();
+        ~D3D12Application()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+            this->!D3D12Application();
+            _disposed = true;
+        }
+
         void Render() override;
+
         virtual void OnRender() abstract;
+
+    private:
+        bool _disposed;
+
+        !D3D12Application();
     };
 }

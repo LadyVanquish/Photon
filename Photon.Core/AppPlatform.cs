@@ -2,7 +2,6 @@
 
 public abstract class AppPlatform : IDisposable
 {
-    public static Type? PlatformType { get; set; }
     private bool _disposed;
 
     public Application? Application { get; internal set; }
@@ -26,7 +25,7 @@ public abstract class AppPlatform : IDisposable
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
+                MainWindow?.Dispose();
             }
 
             // TODO: free unmanaged resources (unmanaged objects) and override finalizer

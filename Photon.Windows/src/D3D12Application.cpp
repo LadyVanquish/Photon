@@ -9,12 +9,12 @@ namespace Photon
 
     }
 
-    D3D12Application::!D3D12Application()
+    void D3D12Application::Render()
     {
 
     }
 
-    void D3D12Application::Render()
+    D3D12Application::!D3D12Application()
     {
 
     }

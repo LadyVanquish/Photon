@@ -70,6 +70,7 @@ public abstract class Application : IDisposable
         {
             if (disposing)
             {
+                _platform?.Dispose();
                 Current = null;
             }
 

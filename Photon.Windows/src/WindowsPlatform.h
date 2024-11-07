@@ -8,7 +8,6 @@ namespace Photon
     {
     public:
         WindowsPlatform(System::String^ title, Window::Rectangle size);
-        ~WindowsPlatform();
 
         property bool IsBlockingRun
         {
@@ -28,12 +27,24 @@ namespace Photon
         void Run() override;
         void RequestExit() override;
 
+    protected:
+        ~WindowsPlatform()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+            this->!WindowsPlatform();
+            _disposed = true;
+        }
+
     internal:
         static System::Collections::Generic::Dictionary<System::IntPtr, WindowsWindow^>^ Windows = gcnew System::Collections::Generic::Dictionary<System::IntPtr, WindowsWindow^>(5);
 
     private:
-
-        bool _disposed;
         WindowsWindow^ _mainWindow;
+        bool _disposed;
+
+        !WindowsPlatform();
     };
 }

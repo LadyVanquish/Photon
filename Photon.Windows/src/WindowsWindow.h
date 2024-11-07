@@ -65,6 +65,7 @@ namespace Photon
                 return;
             }
             this->!WindowsWindow();
+            _disposed = true;
         }
 
     internal:
