@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Photon;
 
@@ -152,6 +154,65 @@ public sealed class Logger : IDisposable
             return;
         }
         Output(eventType, stringHandler.ToString(), null);
+    }
+
+    private const string _hex = "0123456789ABCDEF";
+
+    private string GetLogDataOutput(string message, ReadOnlySpan<byte> data)
+    {
+        Span<char> output = stackalloc char[128];
+        output.Fill(' ');
+        StringBuilder sb = new();
+        sb.AppendLine(CultureInfo.InvariantCulture, $"dumping memory for object {message} ({data.Length} bytes):");
+        int bytes;
+        int asciiOutput = 2;
+        for (bytes = 0; bytes < data.Length; ++bytes, asciiOutput += 2)
+        {
+            if (bytes % 16 == 0)
+            {
+                sb.Append(CultureInfo.InvariantCulture, $"{bytes:X8}: ");
+            }
+            byte b = data[bytes];
+            output[asciiOutput] = _hex[b >> 4];
+            output[asciiOutput + 1] = _hex[b & 0x0F];
+            output[(asciiOutput / 2) + 40] = !char.IsControl((char)b) ? (char)b : '.';
+            if (bytes > 0)
+            {
+                if (((bytes + 1) % 16) == 0)
+                {
+                    sb.AppendLine(output[..((asciiOutput / 2) + 40 + 1)].ToString());
+                    output.Fill(' ');
+                    asciiOutput = 0;
+                }
+                else if (((bytes + 1) % 4) == 0)
+                {
+                    ++asciiOutput;
+                }
+            }
+        }
+        if ((bytes % 16) != 0)
+        {
+            sb.AppendLine(output[..((asciiOutput / 2) + 40 + 1)].ToString());
+        }
+        return sb.ToString();
+    }
+
+    public void LogData(LogEventType eventType, string message, ReadOnlySpan<byte> data)
+    {
+        if ((LogMask & eventType) != eventType)
+        {
+            return;
+        }
+        Output(eventType, GetLogDataOutput(message, data));
+    }
+
+    public void LogData(LogEventType eventType, [InterpolatedStringHandlerArgument("", "eventType")] ref LoggingInterpolatedStringHandler stringHandler, ReadOnlySpan<byte> data)
+    {
+        if ((LogMask & eventType) != eventType)
+        {
+            return;
+        }
+        Output(eventType, GetLogDataOutput(stringHandler.ToString(), data));
     }
 
     public void Dispose()
