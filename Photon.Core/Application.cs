@@ -62,7 +62,9 @@ public abstract class Application : IDisposable
     {
     }
 
-    protected abstract void Render();
+    protected abstract void Update(TimeSpan deltaTime);
+
+    protected abstract void Render(TimeSpan deltaTime);
 
     protected virtual void Dispose(bool disposing)
     {
@@ -82,11 +84,12 @@ public abstract class Application : IDisposable
 
     public void Tick()
     {
+        Update(TimeSpan.Zero);
         if (!BeginDraw())
         {
             return;
         }
-        Render();
+        Render(TimeSpan.Zero);
         EndDraw();
     }
 

@@ -18,9 +18,9 @@ namespace Photon
             _disposed = true;
         }
 
-        void Render() override;
+        void Update(System::TimeSpan deltaTime) override;
 
-        virtual void OnRender() abstract;
+        void Render(System::TimeSpan deltaTime) override;
 
     private:
         bool _disposed;

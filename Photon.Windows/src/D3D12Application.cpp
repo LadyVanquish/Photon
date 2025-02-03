@@ -9,7 +9,12 @@ namespace Photon
 
     }
 
-    void D3D12Application::Render()
+    void D3D12Application::Update(System::TimeSpan deltaTime)
+    {
+
+    }
+
+    void D3D12Application::Render(System::TimeSpan deltaTime)
     {
 
     }

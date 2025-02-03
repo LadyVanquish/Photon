@@ -215,6 +215,15 @@ public sealed class Logger : IDisposable
         Output(eventType, GetLogDataOutput(stringHandler.ToString(), data));
     }
 
+    public void LogException(Exception ex)
+    {
+        if ((LogMask & LogEventType.Exception) != LogEventType.Exception)
+        {
+            return;
+        }
+        Output(LogEventType.Exception, ex.ToString());
+    }
+
     public void Dispose()
     {
         _dispose?.Invoke();

@@ -12,8 +12,8 @@ namespace Photon
 
         if (virtualKey == VK_SHIFT)
         {
-            scanCode = (keyData & 0xFF0000) >> 16;
-            virtualKey = MapVirtualKey(scanCode, 3);
+            scanCode = (keyData & 0x00FF0000) >> 16;
+            virtualKey = MapVirtualKey(scanCode, MAPVK_VSC_TO_VK_EX);
             if (virtualKey == 0)
             {
                 virtualKey = VK_LSHIFT;
@@ -22,7 +22,7 @@ namespace Photon
 
         if (virtualKey == VK_MENU)
         {
-            bool right = (keyData & 0x1000000) >> 24;
+            bool right = (keyData & 0x01000000) >> 24;
             if (right)
             {
                 virtualKey = VK_RMENU;
@@ -35,7 +35,7 @@ namespace Photon
 
         if (virtualKey == VK_CONTROL)
         {
-            bool right = (keyData & 0x1000000) >> 24;
+            bool right = (keyData & 0x01000000) >> 24;
             if (right)
             {
                 virtualKey = VK_RCONTROL;
@@ -455,11 +455,11 @@ namespace Photon
                 return 0;
             case WM_KEYDOWN:
             case WM_SYSKEYDOWN:
-                window->OnEvent(gcnew Events::KeyPressedEvent((int)lParam & 0xFF, KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
+                window->OnEvent(gcnew Events::KeyPressedEvent((int)lParam & 0xFF, ((int)lParam & 0x00FF0000) >> 16, KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
                 return 0;
             case WM_KEYUP:
             case WM_SYSKEYUP:
-                window->OnEvent(gcnew Events::KeyReleasedEvent(KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
+                window->OnEvent(gcnew Events::KeyReleasedEvent(((int)lParam & 0x00FF0000) >> 16, KeyFromVirtualKey(GetVirtualKey(wParam, lParam))));
                 return 0;
             case WM_ACTIVATE:
                 switch (LOWORD(wParam))
