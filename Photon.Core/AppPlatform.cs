@@ -2,8 +2,6 @@
 
 public abstract class AppPlatform : IDisposable
 {
-    private bool _disposed;
-
     public Application? Application { get; internal set; }
     public abstract bool IsBlockingRun { get; }
     public abstract PhotonWindow? MainWindow { get; }
@@ -19,21 +17,6 @@ public abstract class AppPlatform : IDisposable
         Ready?.Invoke(this, EventArgs.Empty);
     }
 
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                MainWindow?.Dispose();
-            }
-
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
-            _disposed = true;
-        }
-    }
-
     public abstract void Run();
 
     public abstract void RequestExit();
@@ -43,14 +26,9 @@ public abstract class AppPlatform : IDisposable
         Application?.OnPlatformExit(exitCode);
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
-        Dispose(disposing: true);
+        MainWindow?.Dispose();
         GC.SuppressFinalize(this);
-    }
-
-    ~AppPlatform()
-    {
-        Dispose(disposing: false);
     }
 }

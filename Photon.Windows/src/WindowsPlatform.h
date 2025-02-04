@@ -28,7 +28,7 @@ namespace Photon
         void RequestExit() override;
 
     protected:
-        ~WindowsPlatform()
+        ~WindowsPlatform() override
         {
             if (_disposed)
             {

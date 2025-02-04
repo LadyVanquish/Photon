@@ -543,6 +543,6 @@ namespace Photon
 
     WindowsPlatform::!WindowsPlatform()
     {
-
+    
     }
 }
