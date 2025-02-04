@@ -4,15 +4,16 @@
 
 namespace Photon
 {
-    int GetVirtualKey(WPARAM wParam, LPARAM lParam)
+    static int GetVirtualKey(WPARAM wParam, LPARAM lParam)
     {
+        PH_INFO("ScanCode pressed: {0:x8}", lParam);
         int virtualKey = (int)wParam;
         int scanCode = 0;
         int keyData = (int)lParam;
 
         if (virtualKey == VK_SHIFT)
         {
-            scanCode = (keyData & 0x00FF0000) >> 16;
+            scanCode = (keyData & 0xFF0000) >> 16;
             virtualKey = MapVirtualKey(scanCode, MAPVK_VSC_TO_VK_EX);
             if (virtualKey == 0)
             {
@@ -49,7 +50,7 @@ namespace Photon
         return virtualKey;
     }
 
-    int GetScanCode(WPARAM wParam, LPARAM lParam)
+    static int GetScanCode(WPARAM wParam, LPARAM lParam)
     {
         int keyData = (int)lParam;
         int scanCode = (keyData & 0xFF0000) >> 16;
@@ -61,12 +62,12 @@ namespace Photon
         return scanCode;
     }
 
-    bool IsExtendedKey(LPARAM lParam)
+    static bool IsExtendedKey(LPARAM lParam)
     {
         return (int)lParam & 0x01000000;
     }
 
-    KeyboardKey KeyFromVirtualKey(int virtualKey)
+    static KeyboardKey KeyFromVirtualKey(int virtualKey)
     {
         switch (virtualKey)
         {
@@ -411,7 +412,7 @@ namespace Photon
         return KeyboardKey::None;
     }
 
-    LRESULT ProcessWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    static LRESULT ProcessWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         WindowsWindow^ window;
         if (!WindowsPlatform::Windows->TryGetValue(System::IntPtr(hWnd), window))

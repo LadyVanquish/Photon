@@ -64,8 +64,8 @@ public sealed class Logger : IDisposable
         }
     }
 
-    private static readonly LogEventType[] _verbosityLevels = new[]
-    {
+    private static readonly LogEventType[] _verbosityLevels =
+    [
         LogEventType.None,
         LogEventType.Exception | LogEventType.Assert | LogEventType.Error,
         LogEventType.Exception | LogEventType.Assert | LogEventType.Error | LogEventType.Warning,
@@ -74,12 +74,12 @@ public sealed class Logger : IDisposable
         LogEventType.Exception | LogEventType.Assert | LogEventType.Error | LogEventType.Warning | LogEventType.Message | LogEventType.Information | LogEventType.Note,
         (LogEventType)255,
         LogEventType.All
-    };
+    ];
 
     private static readonly Logger _nullLogger = new("NullLogger", null, null);
     private static readonly object _lock = new();
 
-    internal static Dictionary<string, Logger> Loggers { get; } = new();
+    internal static Dictionary<string, Logger> Loggers { get; } = [];
 
 #if DEBUG
     public static Logger WindowsLogger { get; } = new LoggerBuilder().WithName("Photon.Windows").WithVerbosityLevel(7).WriteToConsole().Build();
