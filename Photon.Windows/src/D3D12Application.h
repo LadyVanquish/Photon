@@ -5,7 +5,7 @@ namespace Photon
     public ref class D3D12Application abstract : public Application
     {
     public:
-        D3D12Application(AppPlatform^ platform);
+        D3D12Application(System::String^ title, AppPlatform^ platform);
 
     protected:
         ~D3D12Application()
@@ -18,9 +18,9 @@ namespace Photon
             _disposed = true;
         }
 
-        void Update(System::TimeSpan deltaTime) override;
+        void Update(GameTime% gameTime) override;
 
-        void Render(System::TimeSpan deltaTime) override;
+        void Draw(GameTime% gameTime) override;
 
     private:
         bool _disposed;

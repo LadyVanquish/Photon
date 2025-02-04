@@ -4,17 +4,16 @@
 
 namespace Photon
 {
-    D3D12Application::D3D12Application(AppPlatform^ platform) : Application(platform)
+    D3D12Application::D3D12Application(System::String^ title, AppPlatform^ platform) : Application(title, platform)
+    {
+    }
+
+    void D3D12Application::Update(GameTime% gameTime)
     {
 
     }
 
-    void D3D12Application::Update(System::TimeSpan deltaTime)
-    {
-
-    }
-
-    void D3D12Application::Render(System::TimeSpan deltaTime)
+    void D3D12Application::Draw(GameTime% gameTime)
     {
 
     }

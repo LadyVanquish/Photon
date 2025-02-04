@@ -92,7 +92,7 @@ public sealed class ApplicationBuilder
             throw new NotImplementedException();
         }
         AppPlatform platform = (Activator.CreateInstance(_platformType, _title, _positionAndSize) as AppPlatform)!;
-        Application application = (Activator.CreateInstance(_applicationType, platform) as Application)!;
+        Application application = (Activator.CreateInstance(_applicationType, _title, platform) as Application)!;
         platform.Application = application;
         return application;
     }

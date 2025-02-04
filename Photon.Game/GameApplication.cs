@@ -1,14 +1,12 @@
 ﻿namespace Photon;
 
-public sealed class GameApplication(AppPlatform platform) : D3D12Application(platform)
+public sealed class GameApplication(string title, AppPlatform platform) : D3D12Application(title, platform)
 {
-    protected override void Update(TimeSpan deltaTime)
+    protected override void Update(ref GameTime gameTime)
     {
-        throw new NotImplementedException();
     }
 
-    protected override void Render(TimeSpan deltaTime)
+    protected override void Draw(ref GameTime gameTime)
     {
-        throw new NotImplementedException();
     }
 }

@@ -99,8 +99,8 @@ namespace Photon
         void ExitSizeMove();
 
     private:
-        WindowsPlatform^ _platform;
         System::String^ _title;
+        WindowsPlatform^ _platform;
         bool _vSync;
         bool _inSizeMove;
         float _dpi;
