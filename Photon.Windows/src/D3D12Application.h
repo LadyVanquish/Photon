@@ -5,7 +5,17 @@ namespace Photon
     public ref class D3D12Application abstract : public Application
     {
     public:
-        D3D12Application(System::String^ title, AppPlatform^ platform);
+        property PhotonWindow^ MainWindow
+        {
+            PhotonWindow^ get() override
+            {
+                return _mainWindow;
+            }
+        }
+
+        D3D12Application(System::String^ title, Window::Rectangle% size);
+
+        void Run() override;
 
     protected:
         ~D3D12Application()
@@ -22,8 +32,13 @@ namespace Photon
 
         void Draw(GameTime% gameTime) override;
 
+    internal:
+        void RequestExit();
+
     private:
         bool _disposed;
+        WindowsWindow^ _mainWindow;
+        ATOM _wndClass;
 
         !D3D12Application();
     };

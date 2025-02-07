@@ -1,13 +1,11 @@
 #include "phpch.h"
 
 #include "WindowsWindow.h"
-#include "WindowsPlatform.h"
 
 namespace Photon
 {
-    WindowsWindow::WindowsWindow(WindowsPlatform^ platform, System::String^ title, Window::Rectangle positionAndSize, HINSTANCE hInstance)
+    WindowsWindow::WindowsWindow(System::String^ title, Window::Rectangle% positionAndSize, HINSTANCE hInstance)
     {
-        _platform = platform;
         _title = title;
 
         RECT rect {};

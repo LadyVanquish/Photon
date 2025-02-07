@@ -1,8 +1,7 @@
 ﻿using Photon;
 
 ApplicationBuilder builder = new();
-builder.UsePlatform<WindowsPlatform>()
-       .UseApplication<GameApplication>();
+builder.UseApplication<GameApplication>();
 
 LoggerBuilder loggerBuilder = new();
 loggerBuilder.WriteToConsole()
@@ -12,10 +11,10 @@ loggerBuilder.WriteToConsole()
 try
 {
 #endif
-    using (Application app = builder.Build())
-    {
-        app.Run();
-    }
+using (Application app = builder.Build())
+{
+    app.Run();
+}
 #if !DEBUG
 }
 catch (Exception ex)

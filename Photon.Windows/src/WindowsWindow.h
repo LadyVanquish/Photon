@@ -4,8 +4,6 @@ namespace Photon
 {
     using namespace Events;
 
-    ref class WindowsPlatform;
-
     ref class WindowsWindow : public PhotonWindow
     {
     public:
@@ -47,7 +45,7 @@ namespace Photon
             }
         }
 
-        WindowsWindow(WindowsPlatform^ platform, System::String^ title, Window::Rectangle positionAndSize, HINSTANCE hInstance);
+        WindowsWindow(System::String^ title, Window::Rectangle% positionAndSize, HINSTANCE hInstance);
 
         void OnEvent(PhotonEvent^ args)
         {
@@ -100,7 +98,6 @@ namespace Photon
 
     private:
         System::String^ _title;
-        WindowsPlatform^ _platform;
         bool _vSync;
         bool _inSizeMove;
         float _dpi;

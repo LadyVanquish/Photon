@@ -5,7 +5,6 @@ namespace Photon;
 
 public sealed class ApplicationBuilder
 {
-    private Type? _platformType;
     private Type? _applicationType;
     private string _title = GetDefaultTitleName();
     private Rectangle _positionAndSize = new(-1, -1, 1280, 720);
@@ -37,13 +36,7 @@ public sealed class ApplicationBuilder
         return "Photon";
     }
 
-    public ApplicationBuilder UsePlatform<T>() where T : AppPlatform
-    {
-        _platformType = typeof(T);
-        return this;
-    }
-
-    public ApplicationBuilder UseApplication<T>() where T : Application
+    public ApplicationBuilder UseApplication<T>(Action<T>? application = null) where T : Application
     {
         _applicationType = typeof(T);
         return this;
@@ -87,13 +80,7 @@ public sealed class ApplicationBuilder
         {
             throw new NotImplementedException();
         }
-        if (_platformType is null)
-        {
-            throw new NotImplementedException();
-        }
-        AppPlatform platform = (Activator.CreateInstance(_platformType, _title, _positionAndSize) as AppPlatform)!;
-        Application application = (Activator.CreateInstance(_applicationType, _title, platform) as Application)!;
-        platform.Application = application;
+        Application application = (Activator.CreateInstance(_applicationType, _title, _positionAndSize) as Application)!;
         return application;
     }
 }

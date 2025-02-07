@@ -6,37 +6,34 @@ public abstract class Application : IDisposable
 {
     public static Application? Current { get; private set; }
 
-    protected string _title;
-
-    private readonly AppPlatform _platform;
-    private Timer _timer = new();
-    private readonly TimeSpan _maximumElapsedTime = TimeSpan.FromMilliseconds(500);
-    private TimeSpan _accumulatedElapsedTime;
-    private GameTime _updateTime;
-    private GameTime _drawTime;
-
-    private bool _disposed;
-
-    public PhotonWindow? MainWindow => _platform.MainWindow;
+    public abstract PhotonWindow? MainWindow { get; }
+    public Dictionary<IntPtr, PhotonWindow> Windows { get; } = [];
     public bool EnableVerticalSync { get; set; } = true;
-    public float AspectRatio => MainWindow is null ? 0.0f : (float)MainWindow.ClientArea.Width / MainWindow.ClientArea.Height;
     public TimeSpan TargetElapsedTime { get; set; }
     public bool IsFixedTimestep { get; set; }
     public bool ForceUpdatePerDraw { get; set; }
     public bool DrawDesynchronized { get; set; }
     public float DrawInterpolationFactor { get; private set; }
 
+    public event EventHandler? Ready;
     public event EventHandler<ExitEventArgs>? Exit;
 
-    public Application(string title, AppPlatform platform)
+    public Application(string title)
     {
         Debug.Assert(Current is null);
 
         _title = title;
-        _platform = platform;
-        _platform.Ready += HandlePlatformReady;
+        Initialize();
 
         Current = this;
+    }
+
+    public abstract void Run();
+
+    public virtual void Dispose()
+    {
+        Current = null;
+        GC.SuppressFinalize(this);
     }
 
     protected virtual void Initialize()
@@ -56,23 +53,14 @@ public abstract class Application : IDisposable
     {
     }
 
-    internal void HandlePlatformReady(object? sender, EventArgs args)
+    protected void OnReady()
     {
-        Initialize();
+        Ready?.Invoke(this, EventArgs.Empty);
     }
 
-    internal void OnPlatformExit(int exitCode)
+    protected void OnExit(int exitCode)
     {
         Exit?.Invoke(this, new ExitEventArgs(exitCode));
-    }
-
-    internal void OnPlatformKeyboardEvent(KeyboardKey key, bool pressed)
-    {
-        OnKeyboardEvent(key, pressed);
-    }
-
-    internal void OnDisplayChange()
-    {
     }
 
     protected abstract void Update(ref GameTime gameTime);
@@ -85,7 +73,6 @@ public abstract class Application : IDisposable
         {
             if (disposing)
             {
-                _platform?.Dispose();
                 Current = null;
             }
 
@@ -95,9 +82,7 @@ public abstract class Application : IDisposable
         }
     }
 
-    private TimeSpan _timeSinceLastFpsRedraw = TimeSpan.Zero;
-
-    public void Tick()
+    protected void Tick()
     {
         _timer.Tick();
         TimeSpan elapsedAdjustedTime = _timer.ElapsedTimeWithPause;
@@ -170,19 +155,12 @@ public abstract class Application : IDisposable
         }
     }
 
-    public void Run()
-    {
-        _platform.Run();
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-    ~Application()
-    {
-        Dispose(disposing: false);
-    }
+    private readonly string _title;
+    private bool _disposed;
+    private Timer _timer = new();
+    private readonly TimeSpan _maximumElapsedTime = TimeSpan.FromMilliseconds(500);
+    private TimeSpan _accumulatedElapsedTime;
+    private GameTime _updateTime;
+    private GameTime _drawTime;
+    private TimeSpan _timeSinceLastFpsRedraw = TimeSpan.Zero;
 }

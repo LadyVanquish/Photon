@@ -82,13 +82,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\WindowsInput.h" />
     <ClInclude Include="src\ApplicationTypes.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\D3D12Application.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\phpch.h" />
-    <ClInclude Include="src\WindowsPlatform.h" />
     <ClInclude Include="src\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +97,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\WindowsPlatform.cpp" />
     <ClCompile Include="src\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
